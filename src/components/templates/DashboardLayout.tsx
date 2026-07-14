@@ -53,13 +53,19 @@ export function DashboardLayout({
         </header>
         <div className={styles.content}>{children}</div>
         <footer className={styles.footer}>
-          <span>
-            © 2026-{currentYear} {t('footer')}
-          </span>
-          <span className={styles.contact}>
-            {t('footerContact')}{' '}
-            <a href="mailto:olhakhodakivska@gmail.com">olhakhodakivska@gmail.com</a>
-          </span>
+          <div className={styles.footerContainer}>
+            <div className={styles.footerBrand}>
+              <span className={styles.copyright}>
+                © 2026-{currentYear} {t('footer')}
+              </span>
+            </div>
+            <div className={styles.footerContacts}>
+              <span className={styles.footerHighlight}>{t('footerContact')}</span>
+              <a className={styles.contactLink} href="mailto:olhakhodakivska@gmail.com">
+                olhakhodakivska@gmail.com
+              </a>
+            </div>
+          </div>
         </footer>
       </main>
     </div>
