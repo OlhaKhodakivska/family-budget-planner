@@ -1,0 +1,51 @@
+.card {
+  display: grid;
+  gap: 12px;
+  min-height: 130px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 18px;
+  background: var(--color-surface);
+  box-shadow: 0 12px 28px var(--color-shadow);
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--color-text-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.value {
+  margin: 0;
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.income {
+  border-left: 4px solid var(--color-income);
+}
+
+.expense {
+  border-left: 4px solid var(--color-expense);
+}
+
+.primary {
+  border-left: 4px solid var(--color-primary);
+}
+
+.secondary {
+  border-left: 4px solid var(--color-secondary);
+}

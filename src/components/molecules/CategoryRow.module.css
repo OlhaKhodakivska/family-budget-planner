@@ -1,0 +1,50 @@
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: var(--color-surface-muted);
+}
+
+.content {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.label {
+  overflow-wrap: anywhere;
+  font-weight: 800;
+}
+
+.meta {
+  color: var(--color-text-soft);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.amount {
+  font-weight: 800;
+  text-align: right;
+}
+
+.income {
+  color: var(--color-income);
+}
+
+.expense {
+  color: var(--color-expense);
+}
+
+@media (max-width: 560px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .amount {
+    text-align: left;
+  }
+}

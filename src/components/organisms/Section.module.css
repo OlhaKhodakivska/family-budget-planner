@@ -1,0 +1,78 @@
+.section {
+  display: grid;
+  gap: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 18px;
+  background: var(--color-surface);
+  box-shadow: 0 12px 30px var(--color-shadow);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.list {
+  display: grid;
+  gap: 10px;
+}
+
+.empty {
+  margin: 0;
+  color: var(--color-text-soft);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.transfer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: var(--color-surface-muted);
+}
+
+.transferText {
+  display: grid;
+  gap: 4px;
+}
+
+.transferText strong {
+  overflow-wrap: anywhere;
+}
+
+.transferText span {
+  color: var(--color-text-soft);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.transferAmount {
+  color: var(--color-income);
+  font-weight: 800;
+  text-align: right;
+}
+
+@media (max-width: 760px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+
+  .transfer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .transferAmount {
+    text-align: left;
+  }
+}

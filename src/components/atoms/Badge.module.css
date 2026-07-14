@@ -1,0 +1,25 @@
+.badge {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius);
+  padding: 5px 8px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.income {
+  color: var(--color-income);
+  background: var(--color-income-soft);
+}
+
+.expense {
+  color: var(--color-expense);
+  background: var(--color-expense-soft);
+}
+
+.neutral {
+  color: var(--color-secondary);
+  background: rgba(109, 40, 217, 0.12);
+}

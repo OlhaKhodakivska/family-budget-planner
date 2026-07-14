@@ -1,0 +1,241 @@
+.scrim {
+  display: none;
+}
+
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 40;
+  display: grid;
+  width: var(--sidebar-width);
+  grid-template-rows: auto 1fr auto;
+  gap: 22px;
+  border-right: 1px solid var(--color-border);
+  padding: 24px;
+  background: var(--color-surface);
+  transition:
+    transform var(--transition),
+    background-color var(--transition),
+    border-color var(--transition);
+}
+
+.brand {
+  display: grid;
+  gap: 10px;
+}
+
+.logo {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: var(--radius);
+  color: #111827;
+  background: var(--color-primary);
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.brand p {
+  margin: 0;
+  color: var(--color-text-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.nav {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.navGroup {
+  display: grid;
+  gap: 6px;
+}
+
+.nav button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: 0;
+  border-radius: var(--radius);
+  padding: 11px 12px;
+  color: var(--color-text-soft);
+  background: transparent;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-align: left;
+  text-decoration: none;
+  transition:
+    color var(--transition),
+    background-color var(--transition);
+}
+
+.nav button:hover,
+.activeNavItem {
+  color: var(--color-text);
+  background: var(--color-surface-muted);
+}
+
+.savedGoalsNav {
+  display: grid;
+  gap: 4px;
+  margin: 2px 0 2px 28px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 8px;
+}
+
+.savedGoalsNav button {
+  min-height: 32px;
+  padding: 7px 8px;
+  color: var(--color-secondary);
+  font-size: 0.76rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.savedGoalsNav button:hover {
+  color: var(--color-secondary-strong);
+  background: var(--color-primary-soft);
+}
+
+.summary {
+  display: grid;
+  gap: 16px;
+}
+
+.balance {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 14px;
+  background: var(--color-surface-muted);
+}
+
+.balance span {
+  color: var(--color-text-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.balance strong {
+  color: var(--color-primary);
+  font-size: 1.15rem;
+  overflow-wrap: anywhere;
+}
+
+.dreamButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--color-secondary);
+  border-radius: var(--radius);
+  color: var(--color-secondary);
+  background: var(--color-surface);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 900;
+  transition:
+    color var(--transition),
+    background-color var(--transition),
+    border-color var(--transition);
+}
+
+.dreamButton:hover,
+.activeDreamButton {
+  color: #111827;
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+
+.rate {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  background: var(--color-surface-muted);
+}
+
+.rate span {
+  color: var(--color-text-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.rate strong {
+  color: var(--color-text);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.languageToggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 4px;
+  background: var(--color-surface-muted);
+}
+
+.languageToggle button {
+  min-height: 36px;
+  border: 0;
+  border-radius: calc(var(--radius) - 3px);
+  color: var(--color-text-soft);
+  background: transparent;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.languageToggle button:hover,
+.activeLanguage {
+  color: #111827;
+  background: var(--color-primary);
+}
+
+.mobileClose {
+  display: none;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+@media (max-width: 900px) {
+  .scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 35;
+    display: block;
+    background: rgba(17, 24, 39, 0.58);
+  }
+
+  .scrimHidden {
+    display: none;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .open {
+    transform: translateX(0);
+  }
+
+  .mobileClose {
+    display: inline-flex;
+  }
+}
