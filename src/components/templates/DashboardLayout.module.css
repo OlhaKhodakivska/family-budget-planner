@@ -48,9 +48,9 @@
   background: color-mix(in srgb, var(--color-surface) 94%, transparent);
   backdrop-filter: blur(14px);
   color: var(--color-text-soft);
-  font-size: 0.78rem;
-  font-weight: 500;
-  line-height: 1.5;
+  font-size: 0.7rem;
+  font-weight: 400;
+  line-height: 1;
 }
 
 .footerContainer {
@@ -58,7 +58,7 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 10px;
   width: min(1220px, 100%);
   margin: 0 auto;
 }
@@ -71,7 +71,7 @@
 
 .copyright {
   color: var(--color-text);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .footer a {
@@ -87,7 +87,7 @@
 }
 
 .footerHighlight {
-  font-weight: 700;
+  font-weight: 600;
 }
 
 :global([data-theme='dark']) .footer a {
@@ -106,14 +106,14 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 5px;
   justify-content: flex-end;
   min-width: 0;
 }
 
 .contactLink {
   overflow-wrap: anywhere;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 @media (max-width: 900px) {
@@ -142,7 +142,7 @@
 
   .footerContainer {
     flex-direction: column;
-    gap: 16px;
+    gap: 6px;
     text-align: center;
   }
 
@@ -153,6 +153,6 @@
 
   .footerContacts {
     justify-content: center;
-    gap: 16px;
+    gap: 6px;
   }
 }
