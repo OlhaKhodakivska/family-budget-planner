@@ -15,7 +15,7 @@ const exchangeRateUrl = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exc
 
 const dictionary = {
   en: {
-    appTitle: 'Family Budget',
+    appTitle: 'Budget under control',
     brandSubtitle: 'Home finance control',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
@@ -37,7 +37,7 @@ const dictionary = {
     creditCards: 'Credit Cards',
     savings: 'Savings',
     netBalance: 'Net balance',
-    heroTitle: 'Family budget under control',
+    heroTitle: 'Budget under control',
     heroSubtitle: 'Track income, expenses, credit limits, debts, and savings in one responsive dashboard.',
     financialPulse: 'Financial pulse',
     updating: 'Updating',
