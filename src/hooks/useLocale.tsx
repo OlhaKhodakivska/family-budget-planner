@@ -20,6 +20,9 @@ const dictionary = {
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     closeModal: 'Close modal',
+    edit: 'Edit',
+    delete: 'Delete',
+    cancel: 'Cancel',
     loading: 'Loading',
     themeSwitch: 'Theme switch',
     lightTheme: 'Light',
@@ -55,7 +58,9 @@ const dictionary = {
     receiptNote: 'Receipt note',
     medicineSchool: 'Medicine, school...',
     addIncome: 'Add income',
+    saveIncome: 'Save income',
     addExpense: 'Add expense',
+    saveExpense: 'Save expense',
     noIncome: 'No income entries yet.',
     noExpenses: 'No expense entries yet.',
     cardName: 'Card name',
@@ -95,6 +100,7 @@ const dictionary = {
     stepCost: 'Potential cost',
     addStep: 'Add step',
     saveGoal: 'Save goal',
+    updateGoal: 'Update goal',
     noDreams: 'No dreams or goals yet.',
     potentialCost: 'Potential cost',
     created: 'Created',
@@ -110,6 +116,9 @@ const dictionary = {
     openMenu: 'Відкрити меню',
     closeMenu: 'Закрити меню',
     closeModal: 'Закрити вікно',
+    edit: 'Редагувати',
+    delete: 'Видалити',
+    cancel: 'Скасувати',
     loading: 'Завантаження',
     themeSwitch: 'Перемикач теми',
     lightTheme: 'Світла',
@@ -145,7 +154,9 @@ const dictionary = {
     receiptNote: 'Опис чека',
     medicineSchool: 'Ліки, школа...',
     addIncome: 'Додати дохід',
+    saveIncome: 'Зберегти дохід',
     addExpense: 'Додати витрату',
+    saveExpense: 'Зберегти витрату',
     noIncome: 'Доходів ще немає.',
     noExpenses: 'Витрат ще немає.',
     cardName: 'Назва картки',
@@ -185,6 +196,7 @@ const dictionary = {
     stepCost: 'Потенційні витрати',
     addStep: 'Додати крок',
     saveGoal: 'Зберегти ціль',
+    updateGoal: 'Оновити ціль',
     noDreams: 'Мрій або цілей ще немає.',
     potentialCost: 'Потенційні витрати',
     created: 'Створено',
@@ -205,6 +217,7 @@ interface LocaleContextValue {
   exchangeDate: string | null;
   t: (key: TranslationKey) => string;
   formatCurrency: (value: number) => string;
+  formatConvertedCurrency: (value: number) => string | null;
   parseInputAmount: (value: string) => number;
   formatDate: (value: string) => string;
 }
@@ -273,6 +286,14 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       t: (key) => dictionary[language][key],
       formatCurrency: (amount) =>
         formatCurrencyValue(convertFromBaseCurrency(amount, language, exchangeRate?.rate ?? null), language),
+      formatConvertedCurrency: (amount) => {
+        if (language === 'uk') {
+          return formatCurrencyValue(toMoneyNumber(amount), 'en');
+        }
+
+        const rate = exchangeRate?.rate ?? null;
+        return rate ? formatCurrencyValue(convertFromBaseCurrency(amount, 'uk', rate), 'uk') : null;
+      },
       parseInputAmount: (amount) => convertToBaseCurrency(parseMoney(amount), language, exchangeRate?.rate ?? null),
       formatDate: (date) => formatDateValue(date, language),
     }),

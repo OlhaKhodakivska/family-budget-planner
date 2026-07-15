@@ -63,10 +63,15 @@ export interface BudgetTotals {
 
 export type BudgetAction =
   | { type: 'ADD_INCOME'; payload: BudgetEntry }
+  | { type: 'UPDATE_INCOME'; payload: BudgetEntry }
+  | { type: 'REMOVE_INCOME'; payload: string }
   | { type: 'ADD_EXPENSE'; payload: BudgetEntry }
+  | { type: 'UPDATE_EXPENSE'; payload: BudgetEntry }
+  | { type: 'REMOVE_EXPENSE'; payload: string }
   | { type: 'ADD_CARD'; payload: CreditCard }
   | { type: 'REMOVE_CARD'; payload: string }
   | { type: 'ADD_SAVINGS_TRANSFER'; payload: SavingsTransfer }
   | { type: 'ADD_DREAM_GOAL'; payload: DreamGoal }
+  | { type: 'UPDATE_DREAM_GOAL'; payload: DreamGoal }
   | { type: 'REMOVE_DREAM_GOAL'; payload: string }
   | { type: 'HYDRATE'; payload: BudgetState };

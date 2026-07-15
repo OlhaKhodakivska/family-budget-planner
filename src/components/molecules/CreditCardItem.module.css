@@ -41,7 +41,15 @@
 }
 
 .metric strong {
+  display: grid;
+  gap: 4px;
   font-size: 0.84rem;
+}
+
+.metric strong small {
+  color: var(--color-text-soft);
+  font-size: 0.7rem;
+  font-weight: 700;
 }
 
 @media (max-width: 560px) {

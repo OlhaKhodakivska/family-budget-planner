@@ -1,4 +1,4 @@
-import { CreditCard, Home, Landmark, Menu, ReceiptText, Sparkles, Wallet, X } from 'lucide-react';
+import { CreditCard, Home, Landmark, ReceiptText, Sparkles, Wallet, X } from 'lucide-react';
 import type { DashboardSection, DreamGoal, Theme } from '../../types/budget';
 import { useLocale } from '../../hooks/useLocale';
 import { IconButton } from '../atoms/IconButton';
@@ -9,10 +9,12 @@ interface LeftSidebarProps {
   theme: Theme;
   isOpen: boolean;
   activeSection: DashboardSection;
+  activeGoalId: string | null;
   dreamGoals: DreamGoal[];
   netBalance: number;
   onClose: () => void;
   onSelectSection: (section: DashboardSection) => void;
+  onSelectGoal: (goalId: string) => void;
   onToggleTheme: () => void;
 }
 
@@ -28,16 +30,23 @@ export function LeftSidebar({
   theme,
   isOpen,
   activeSection,
+  activeGoalId,
   dreamGoals,
   netBalance,
   onClose,
   onSelectSection,
+  onSelectGoal,
   onToggleTheme,
 }: LeftSidebarProps) {
   const { language, setLanguage, t, formatCurrency, eurToUahRate, exchangeDate } = useLocale();
 
   const handleSelectSection = (section: DashboardSection) => {
     onSelectSection(section);
+    onClose();
+  };
+
+  const handleSelectGoal = (goalId: string) => {
+    onSelectGoal(goalId);
     onClose();
   };
 
@@ -50,9 +59,6 @@ export function LeftSidebar({
       />
       <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`} aria-label={t('budgetNavigation')}>
         <div className={styles.brand}>
-          <span className={styles.logo}>
-            <Menu size={22} />
-          </span>
           <h1>{t('appTitle')}</h1>
           <p>{t('brandSubtitle')}</p>
           <span className={styles.mobileClose}>
@@ -73,7 +79,12 @@ export function LeftSidebar({
               {section === 'savings' && dreamGoals.length ? (
                 <span className={styles.savedGoalsNav}>
                   {dreamGoals.map((goal) => (
-                    <button type="button" key={goal.id} onClick={() => handleSelectSection('dreams')}>
+                    <button
+                      type="button"
+                      key={goal.id}
+                      className={activeGoalId === goal.id ? styles.activeGoalItem : ''}
+                      onClick={() => handleSelectGoal(goal.id)}
+                    >
                       <Sparkles size={14} />
                       {goal.title}
                     </button>

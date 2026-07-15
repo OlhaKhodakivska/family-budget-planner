@@ -24,16 +24,6 @@
   gap: 10px;
 }
 
-.logo {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border-radius: var(--radius);
-  color: #111827;
-  background: var(--color-primary);
-}
-
 .brand h1 {
   margin: 0;
   font-size: 1.25rem;
@@ -100,7 +90,8 @@
   overflow-wrap: anywhere;
 }
 
-.savedGoalsNav button:hover {
+.savedGoalsNav button:hover,
+.activeGoalItem {
   color: var(--color-secondary-strong);
   background: var(--color-primary-soft);
 }

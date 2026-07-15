@@ -13,16 +13,45 @@ import { DashboardLayout } from '../components/templates/DashboardLayout';
 import { useBudgetStore } from '../hooks/useBudgetStore';
 import { useLocale } from '../hooks/useLocale';
 import { useTheme } from '../hooks/useTheme';
+import { getHashForSection, getRouteFromHash } from '../utils/routes';
 import styles from './BudgetDashboard.module.css';
 
 export function BudgetDashboard() {
-  const { state, dispatch, totals } = useBudgetStore();
   const { theme, toggleTheme } = useTheme();
-  const { t, formatCurrency } = useLocale();
+  const { language, t, formatCurrency, formatConvertedCurrency } = useLocale();
+  const { state, dispatch, totals } = useBudgetStore(language);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<DashboardSection>('overview');
+  const [activeSection, setActiveSection] = useState<DashboardSection>(() => getRouteFromHash(window.location.hash).section);
+  const [activeGoalId, setActiveGoalId] = useState<string | null>(() => getRouteFromHash(window.location.hash).goalId);
   const [loading, setLoading] = useState(true);
   const [calculating, setCalculating] = useState(false);
+
+  const selectSection = (section: DashboardSection) => {
+    setActiveSection(section);
+    setActiveGoalId(null);
+    window.history.pushState(null, '', getHashForSection(section));
+  };
+
+  const selectGoal = (goalId: string) => {
+    setActiveSection('dreams');
+    setActiveGoalId(goalId);
+    window.history.pushState(null, '', getHashForSection('dreams', goalId));
+  };
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const route = getRouteFromHash(window.location.hash);
+      setActiveSection(route.section);
+      setActiveGoalId(route.goalId);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('popstate', handleHashChange);
+    };
+  }, []);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setLoading(false), 650);
@@ -41,11 +70,13 @@ export function BudgetDashboard() {
       theme={theme}
       sidebarOpen={sidebarOpen}
       activeSection={activeSection}
+      activeGoalId={activeGoalId}
       dreamGoals={state.dreamGoals}
       netBalance={totals.netBalance}
       onOpenSidebar={() => setSidebarOpen(true)}
       onCloseSidebar={() => setSidebarOpen(false)}
-      onSelectSection={setActiveSection}
+      onSelectSection={selectSection}
+      onSelectGoal={selectGoal}
       onToggleTheme={toggleTheme}
     >
       {activeSection === 'overview' ? (
@@ -75,6 +106,7 @@ export function BudgetDashboard() {
             <MetricCard
               label={t('totalIncome')}
               value={formatCurrency(totals.totalIncome)}
+              convertedValue={formatConvertedCurrency(totals.totalIncome)}
               icon={<Banknote size={22} />}
               tone="income"
               loading={loading}
@@ -82,6 +114,7 @@ export function BudgetDashboard() {
             <MetricCard
               label={t('totalExpenses')}
               value={formatCurrency(totals.totalExpenses)}
+              convertedValue={formatConvertedCurrency(totals.totalExpenses)}
               icon={<ReceiptText size={22} />}
               tone="expense"
               loading={loading}
@@ -89,6 +122,7 @@ export function BudgetDashboard() {
             <MetricCard
               label={t('totalSavings')}
               value={formatCurrency(totals.totalSavings)}
+              convertedValue={formatConvertedCurrency(totals.totalSavings)}
               icon={<Landmark size={22} />}
               tone="primary"
               loading={loading}
@@ -96,6 +130,7 @@ export function BudgetDashboard() {
             <MetricCard
               label={t('creditAvailable')}
               value={formatCurrency(totals.totalCreditAvailable)}
+              convertedValue={formatConvertedCurrency(totals.totalCreditAvailable)}
               icon={<CreditCard size={22} />}
               tone="secondary"
               loading={loading}
@@ -144,7 +179,9 @@ export function BudgetDashboard() {
               dispatch={dispatch}
             />
           ) : null}
-          {activeSection === 'dreams' ? <DreamsAndGoals goals={state.dreamGoals} dispatch={dispatch} /> : null}
+          {activeSection === 'dreams' ? (
+            <DreamsAndGoals goals={state.dreamGoals} activeGoalId={activeGoalId} dispatch={dispatch} />
+          ) : null}
         </section>
       )}
     </DashboardLayout>

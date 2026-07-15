@@ -10,7 +10,7 @@ interface CreditCardItemProps {
 }
 
 export function CreditCardItem({ card, onRemove }: CreditCardItemProps) {
-  const { t, formatCurrency } = useLocale();
+  const { t, formatCurrency, formatConvertedCurrency } = useLocale();
   const available = card.limit - card.debt;
 
   return (
@@ -27,15 +27,24 @@ export function CreditCardItem({ card, onRemove }: CreditCardItemProps) {
       <div className={styles.grid}>
         <span className={styles.metric}>
           <span>{t('limit')}</span>
-          <strong>{formatCurrency(card.limit)}</strong>
+          <strong>
+            <span>{formatCurrency(card.limit)}</span>
+            {formatConvertedCurrency(card.limit) ? <small>{formatConvertedCurrency(card.limit)}</small> : null}
+          </strong>
         </span>
         <span className={styles.metric}>
           <span>{t('debt')}</span>
-          <strong>{formatCurrency(card.debt)}</strong>
+          <strong>
+            <span>{formatCurrency(card.debt)}</span>
+            {formatConvertedCurrency(card.debt) ? <small>{formatConvertedCurrency(card.debt)}</small> : null}
+          </strong>
         </span>
         <span className={styles.metric}>
           <span>{t('available')}</span>
-          <strong className={styles.available}>{formatCurrency(available)}</strong>
+          <strong className={styles.available}>
+            <span>{formatCurrency(available)}</span>
+            {formatConvertedCurrency(available) ? <small>{formatConvertedCurrency(available)}</small> : null}
+          </strong>
         </span>
       </div>
     </article>

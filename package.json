@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "test": "tsc -p tsconfig.test.json && esbuild tests/*.test.ts --bundle --platform=node --format=esm --outdir=.test-dist && node --test .test-dist/*.js",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"

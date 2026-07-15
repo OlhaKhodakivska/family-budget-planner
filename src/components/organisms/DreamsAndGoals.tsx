@@ -1,6 +1,6 @@
 import { useMemo, useState, type FormEvent } from 'react';
-import { Plus, Sparkles, Star, Trash2 } from 'lucide-react';
-import type { BudgetAction, DreamGoal } from '../../types/budget';
+import { Check, Plus, Sparkles, Star, Trash2, X } from 'lucide-react';
+import type { BudgetAction, DreamGoal, DreamStep } from '../../types/budget';
 import { useLocale } from '../../hooks/useLocale';
 import { capitalizeFirstLetter, createId, formatMoneyInput } from '../../utils/budget';
 import { Button } from '../atoms/Button';
@@ -20,6 +20,7 @@ interface DraftStep {
 
 interface DreamsAndGoalsProps {
   goals: DreamGoal[];
+  activeGoalId: string | null;
   dispatch: React.Dispatch<BudgetAction>;
 }
 
@@ -29,11 +30,12 @@ const createDraftStep = (): DraftStep => ({
   cost: '',
 });
 
-export function DreamsAndGoals({ goals, dispatch }: DreamsAndGoalsProps) {
+export function DreamsAndGoals({ goals, activeGoalId, dispatch }: DreamsAndGoalsProps) {
   const { language, t, formatCurrency, parseInputAmount } = useLocale();
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
   const [steps, setSteps] = useState<DraftStep[]>([createDraftStep()]);
+  const [editingGoal, setEditingGoal] = useState<DreamGoal | null>(null);
 
   const draftPotentialCost = useMemo(
     () =>
@@ -48,12 +50,34 @@ export function DreamsAndGoals({ goals, dispatch }: DreamsAndGoalsProps) {
     setSteps((current) => current.map((step) => (step.id === id ? { ...step, ...nextStep } : step)));
   };
 
+  const resetForm = () => {
+    setTitle('');
+    setNote('');
+    setSteps([createDraftStep()]);
+    setEditingGoal(null);
+  };
+
+  const handleEdit = (goal: DreamGoal) => {
+    setEditingGoal(goal);
+    setTitle(goal.title);
+    setNote(goal.note);
+    setSteps(
+      goal.steps.length
+        ? goal.steps.map((step) => ({
+            id: step.id,
+            text: step.text,
+            cost: formatCurrency(step.cost),
+          }))
+        : [createDraftStep()],
+    );
+  };
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const parsedSteps = steps
+    const parsedSteps: DreamStep[] = steps
       .map((step) => ({
-        id: createId('goal-step'),
+        id: step.id.startsWith('goal-step') ? step.id : createId('goal-step'),
         text: step.text.trim(),
         cost: parseInputAmount(step.cost),
       }))
@@ -66,19 +90,17 @@ export function DreamsAndGoals({ goals, dispatch }: DreamsAndGoalsProps) {
     if (!title.trim() || !parsedSteps.length) return;
 
     dispatch({
-      type: 'ADD_DREAM_GOAL',
+      type: editingGoal ? 'UPDATE_DREAM_GOAL' : 'ADD_DREAM_GOAL',
       payload: {
-        id: createId('dream'),
+        id: editingGoal?.id ?? createId('dream'),
         title: title.trim(),
         note: note.trim(),
         steps: parsedSteps,
-        createdAt: new Date().toISOString(),
+        createdAt: editingGoal?.createdAt ?? new Date().toISOString(),
       },
     });
 
-    setTitle('');
-    setNote('');
-    setSteps([createDraftStep()]);
+    resetForm();
   };
 
   return (
@@ -141,12 +163,17 @@ export function DreamsAndGoals({ goals, dispatch }: DreamsAndGoalsProps) {
           <Button type="button" variant="secondary" icon={<Plus size={18} />} onClick={() => setSteps([...steps, createDraftStep()])}>
             {t('addStep')}
           </Button>
-          <Button type="submit" icon={<Star size={18} />}>
-            {t('saveGoal')}
+          <Button type="submit" icon={editingGoal ? <Check size={18} /> : <Star size={18} />}>
+            {editingGoal ? t('updateGoal') : t('saveGoal')}
           </Button>
+          {editingGoal ? (
+            <Button type="button" variant="secondary" icon={<X size={18} />} onClick={resetForm}>
+              {t('cancel')}
+            </Button>
+          ) : null}
         </div>
       </form>
-      <DreamGoalsList goals={goals} dispatch={dispatch} />
+      <DreamGoalsList goals={goals} activeGoalId={activeGoalId} dispatch={dispatch} onEdit={handleEdit} />
     </section>
   );
 }

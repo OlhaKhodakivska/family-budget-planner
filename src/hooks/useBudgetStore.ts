@@ -1,45 +1,13 @@
-import { useEffect, useMemo, useReducer } from 'react';
-import type { BudgetAction, BudgetState } from '../types/budget';
+import { useEffect, useMemo, useReducer, useRef } from 'react';
+import type { BudgetState, Language } from '../types/budget';
 import { calculateTotals, initialBudgetState, toMoneyNumber } from '../utils/budget';
+import { budgetReducer } from '../utils/budgetReducer';
 
-const storageKey = 'family-budget-state-v2';
+const getStorageKey = (language: Language) => `family-budget-state-v2-${language}`;
 
-const reducer = (state: BudgetState, action: BudgetAction): BudgetState => {
-  switch (action.type) {
-    case 'ADD_INCOME':
-      return { ...state, incomes: [action.payload, ...state.incomes] };
-    case 'ADD_EXPENSE':
-      return { ...state, expenses: [action.payload, ...state.expenses] };
-    case 'ADD_CARD':
-      return { ...state, creditCards: [action.payload, ...state.creditCards] };
-    case 'REMOVE_CARD':
-      return {
-        ...state,
-        creditCards: state.creditCards.filter((card) => card.id !== action.payload),
-      };
-    case 'ADD_SAVINGS_TRANSFER':
-      return {
-        ...state,
-        savingsBalance: toMoneyNumber(state.savingsBalance) + toMoneyNumber(action.payload.amount),
-        savingsTransfers: [action.payload, ...state.savingsTransfers],
-      };
-    case 'ADD_DREAM_GOAL':
-      return { ...state, dreamGoals: [action.payload, ...state.dreamGoals] };
-    case 'REMOVE_DREAM_GOAL':
-      return {
-        ...state,
-        dreamGoals: state.dreamGoals.filter((goal) => goal.id !== action.payload),
-      };
-    case 'HYDRATE':
-      return action.payload;
-    default:
-      return state;
-  }
-};
-
-const getInitialState = (): BudgetState => {
+const getInitialState = (language: Language): BudgetState => {
   try {
-    const stored = window.localStorage.getItem(storageKey);
+    const stored = window.localStorage.getItem(getStorageKey(language));
     if (!stored) return initialBudgetState;
 
     const parsed = JSON.parse(stored) as Partial<BudgetState>;
@@ -56,12 +24,26 @@ const getInitialState = (): BudgetState => {
   }
 };
 
-export const useBudgetStore = () => {
-  const [state, dispatch] = useReducer(reducer, undefined, getInitialState);
+export const useBudgetStore = (language: Language) => {
+  const hydratedLanguage = useRef(language);
+  const skipNextPersist = useRef(false);
+  const [state, dispatch] = useReducer(budgetReducer, language, getInitialState);
 
   useEffect(() => {
-    window.localStorage.setItem(storageKey, JSON.stringify(state));
-  }, [state]);
+    hydratedLanguage.current = language;
+    skipNextPersist.current = true;
+    dispatch({ type: 'HYDRATE', payload: getInitialState(language) });
+  }, [language]);
+
+  useEffect(() => {
+    if (hydratedLanguage.current !== language) return;
+    if (skipNextPersist.current) {
+      skipNextPersist.current = false;
+      return;
+    }
+
+    window.localStorage.setItem(getStorageKey(language), JSON.stringify(state));
+  }, [language, state]);
 
   const totals = useMemo(() => calculateTotals(state), [state]);
 

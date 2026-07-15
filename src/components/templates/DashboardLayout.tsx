@@ -11,11 +11,13 @@ interface DashboardLayoutProps {
   theme: Theme;
   sidebarOpen: boolean;
   activeSection: DashboardSection;
+  activeGoalId: string | null;
   dreamGoals: DreamGoal[];
   netBalance: number;
   onOpenSidebar: () => void;
   onCloseSidebar: () => void;
   onSelectSection: (section: DashboardSection) => void;
+  onSelectGoal: (goalId: string) => void;
   onToggleTheme: () => void;
 }
 
@@ -24,11 +26,13 @@ export function DashboardLayout({
   theme,
   sidebarOpen,
   activeSection,
+  activeGoalId,
   dreamGoals,
   netBalance,
   onOpenSidebar,
   onCloseSidebar,
   onSelectSection,
+  onSelectGoal,
   onToggleTheme,
 }: DashboardLayoutProps) {
   const { t } = useLocale();
@@ -40,10 +44,12 @@ export function DashboardLayout({
         theme={theme}
         isOpen={sidebarOpen}
         activeSection={activeSection}
+        activeGoalId={activeGoalId}
         dreamGoals={dreamGoals}
         netBalance={netBalance}
         onClose={onCloseSidebar}
         onSelectSection={onSelectSection}
+        onSelectGoal={onSelectGoal}
         onToggleTheme={onToggleTheme}
       />
       <main className={styles.main}>

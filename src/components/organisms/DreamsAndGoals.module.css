@@ -37,6 +37,11 @@
     radial-gradient(circle at 100% 0, var(--color-primary-soft), transparent 36%);
 }
 
+.activeGoal {
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
 .goalTop,
 .goalFooter {
   display: flex;
@@ -50,6 +55,11 @@
   align-items: center;
   gap: 8px;
   color: var(--color-secondary);
+}
+
+.goalActions {
+  display: flex;
+  gap: 6px;
 }
 
 .note {
@@ -91,8 +101,16 @@
 }
 
 .savedStepContent strong {
+  display: grid;
+  gap: 4px;
   color: var(--color-income);
   white-space: nowrap;
+}
+
+.savedStepContent strong small {
+  color: var(--color-text-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
 }
 
 .goalFooter {

@@ -57,9 +57,17 @@
 }
 
 .transferAmount {
+  display: grid;
+  gap: 4px;
   color: var(--color-income);
   font-weight: 800;
   text-align: right;
+}
+
+.transferAmount small {
+  color: var(--color-text-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
 }
 
 @media (max-width: 760px) {

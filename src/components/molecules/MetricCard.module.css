@@ -28,10 +28,18 @@
 }
 
 .value {
+  display: grid;
+  gap: 5px;
   margin: 0;
   font-size: 1.55rem;
   font-weight: 800;
   line-height: 1.15;
+}
+
+.value small {
+  color: var(--color-text-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
 .income {

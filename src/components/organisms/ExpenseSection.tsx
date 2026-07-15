@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Minus } from 'lucide-react';
+import { Check, Minus, X } from 'lucide-react';
 import type { BudgetAction, BudgetEntry } from '../../types/budget';
 import { useLocale } from '../../hooks/useLocale';
 import { capitalizeFirstLetter, createId, expenseCategories, formatMoneyInput } from '../../utils/budget';
@@ -16,31 +16,51 @@ interface ExpenseSectionProps {
 }
 
 export function ExpenseSection({ expenses, dispatch }: ExpenseSectionProps) {
-  const { language, t, parseInputAmount } = useLocale();
+  const { language, t, formatCurrency, parseInputAmount } = useLocale();
   const [category, setCategory] = useState<string>(expenseCategories[0]);
   const [customCategory, setCustomCategory] = useState('');
   const [label, setLabel] = useState('');
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [editingEntry, setEditingEntry] = useState<BudgetEntry | null>(null);
+
+  const resetForm = () => {
+    setCategory(expenseCategories[0]);
+    setLabel('');
+    setAmount('');
+    setCustomCategory('');
+    setEditingEntry(null);
+  };
+
+  const handleEdit = (entry: BudgetEntry) => {
+    const isPresetCategory = expenseCategories.includes(entry.category as (typeof expenseCategories)[number]);
+
+    setEditingEntry(entry);
+    setCategory(isPresetCategory ? entry.category : expenseCategories[0]);
+    setCustomCategory(isPresetCategory ? '' : entry.category);
+    setLabel(entry.label);
+    setAmount(formatCurrency(entry.amount));
+    setDate(entry.date);
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const parsedAmount = parseInputAmount(amount);
     if (!label.trim() || !Number.isFinite(parsedAmount) || parsedAmount <= 0) return;
 
+    const payload: BudgetEntry = {
+      id: editingEntry?.id ?? createId('expense'),
+      category: customCategory.trim() || category,
+      label: label.trim(),
+      amount: parsedAmount,
+      date,
+    };
+
     dispatch({
-      type: 'ADD_EXPENSE',
-      payload: {
-        id: createId('expense'),
-        category: customCategory.trim() || category,
-        label: label.trim(),
-        amount: parsedAmount,
-        date,
-      },
+      type: editingEntry ? 'UPDATE_EXPENSE' : 'ADD_EXPENSE',
+      payload,
     });
-    setLabel('');
-    setAmount('');
-    setCustomCategory('');
+    resetForm();
   };
 
   return (
@@ -91,14 +111,27 @@ export function ExpenseSection({ expenses, dispatch }: ExpenseSectionProps) {
           <Input type="date" value={date} onChange={(event) => setDate(event.target.value)} />
         </FormField>
         <div className={styles.full}>
-          <Button type="submit" icon={<Minus size={18} />} variant="secondary" fullWidth>
-            {t('addExpense')}
+          <Button type="submit" icon={editingEntry ? <Check size={18} /> : <Minus size={18} />} variant="secondary" fullWidth>
+            {editingEntry ? t('saveExpense') : t('addExpense')}
           </Button>
+          {editingEntry ? (
+            <Button type="button" variant="secondary" icon={<X size={18} />} fullWidth onClick={resetForm}>
+              {t('cancel')}
+            </Button>
+          ) : null}
         </div>
       </form>
       <div className={styles.list}>
         {expenses.length ? (
-          expenses.map((entry) => <CategoryRow key={entry.id} kind="expense" {...entry} />)
+          expenses.map((entry) => (
+            <CategoryRow
+              key={entry.id}
+              kind="expense"
+              {...entry}
+              onEdit={() => handleEdit(entry)}
+              onDelete={() => dispatch({ type: 'REMOVE_EXPENSE', payload: entry.id })}
+            />
+          ))
         ) : (
           <p className={styles.empty}>{t('noExpenses')}</p>
         )}

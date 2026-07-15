@@ -16,7 +16,7 @@ interface SavingsTrackerProps {
 }
 
 export function SavingsTracker({ balance, transfers, dispatch }: SavingsTrackerProps) {
-  const { language, t, formatCurrency, formatDate, parseInputAmount } = useLocale();
+  const { language, t, formatCurrency, formatConvertedCurrency, formatDate, parseInputAmount } = useLocale();
   const [label, setLabel] = useState('');
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
@@ -43,7 +43,9 @@ export function SavingsTracker({ balance, transfers, dispatch }: SavingsTrackerP
     <section className={styles.section} id="savings">
       <CardHeader
         title={t('savings')}
-        subtitle={`${t('currentSavingsPool')}: ${formatCurrency(balance)}`}
+        subtitle={`${t('currentSavingsPool')}: ${formatCurrency(balance)}${
+          formatConvertedCurrency(balance) ? ` (${formatConvertedCurrency(balance)})` : ''
+        }`}
         action={<Landmark size={20} color="var(--color-income)" />}
       />
       <form className={styles.form} onSubmit={handleSubmit}>
@@ -80,7 +82,10 @@ export function SavingsTracker({ balance, transfers, dispatch }: SavingsTrackerP
                 <strong>{transfer.label}</strong>
                 <span>{formatDate(transfer.date)}</span>
               </span>
-              <strong className={styles.transferAmount}>{formatCurrency(transfer.amount)}</strong>
+              <strong className={styles.transferAmount}>
+                <span>{formatCurrency(transfer.amount)}</span>
+                {formatConvertedCurrency(transfer.amount) ? <small>{formatConvertedCurrency(transfer.amount)}</small> : null}
+              </strong>
             </article>
           ))
         ) : (
