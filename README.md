@@ -85,13 +85,13 @@ npm run preview
 The project is configured for GitHub Pages deployment with the base path:
 
 ```ts
-base: '/family-budget-planner/'
+base: '/budget-planner/'
 ```
 
 Live page:
 
 ```text
-https://OlhaKhodakivska.github.io/family-budget-planner/
+https://OlhaKhodakivska.github.io/budget-planner/
 ```
 
 To deploy:
